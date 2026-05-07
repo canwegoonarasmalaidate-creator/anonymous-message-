@@ -16,20 +16,16 @@ app.post("/send", async (req, res) => {
 
         const transporter = nodemailer.createTransport({
 
-    host: "smtp.gmail.com",
+    host: "smtp-relay.brevo.com",
 
     port: 587,
 
     secure: false,
 
-    requireTLS: true,
-
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    },
-
-    family: 4
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
+    }
 
 });
 
@@ -37,7 +33,7 @@ app.post("/send", async (req, res) => {
 
             from: process.env.EMAIL_USER,
 
-            to: process.env.EMAIL_USER,
+            to: "canwegoonarasmalaidate@gmail.com",
 
             subject: "Anonymous Message",
 
