@@ -8,50 +8,56 @@ app.use(express.static("public"));
 
 app.post("/send", async (req, res) => {
 
-  const { message } = req.body;
+    const { message } = req.body;
 
-  console.log("Message received:", message);
+    console.log("MESSAGE:", message);
 
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
+    try {
 
-  console.log(
-    process.env.EMAIL_PASS
-      ? "EMAIL_PASS exists"
-      : "EMAIL_PASS missing"
-  );
+        const transporter = nodemailer.createTransport({
 
-  try {
+            service: "gmail",
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: "New Anonymous Message",
-      text: message
-    });
+        });
 
-    console.log("EMAIL SENT SUCCESSFULLY");
+        await transporter.sendMail({
 
-    res.send("Message Sent!");
+            from: process.env.EMAIL_USER,
 
-  } catch (error) {
+            to: process.env.EMAIL_USER,
 
-    console.log("EMAIL ERROR:");
-    console.log(error);
+            subject: "Anonymous Message",
 
-    res.send("Error Sending Message");
+            text: message
 
-  }
+        });
+
+        console.log("EMAIL SENT");
+
+        res.send("Message Sent!");
+
+    }
+
+    catch (error) {
+
+        console.log("FULL ERROR:");
+        console.log(error);
+
+        res.send("Error Sending Message");
+
+    }
 
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+
+    console.log(`Server running on port ${PORT}`);
+
 });
